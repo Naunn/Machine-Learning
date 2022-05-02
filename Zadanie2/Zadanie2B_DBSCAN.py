@@ -14,17 +14,26 @@ data['reading_score'] = to_numeric(data['reading_score'])
 data = data.ffill().bfill()
 data_dummies = get_dummies(data)
 
+data_scores = data[['math_score', 'reading_score', 'writing_score']]
+
 scaler = StandardScaler()
 data = scaler.fit_transform(data_dummies)
 data = normalize(data)
 data = DataFrame(data)
 
+data_scores = scaler.fit_transform(data_scores)
+data_scores = normalize(data_scores)
+data_scores = DataFrame(data_scores)
+
 pca = PCA(n_components = 2)
 data = pca.fit_transform(data)
 data = DataFrame(data)
 
-epsilon = 0.07
-min_samples = 5
+data_scores = pca.fit_transform(data_scores)
+data_scores = DataFrame(data_scores)
+
+epsilon = 0.12
+min_samples = 15
 metric = 'euclidean'            #‘cityblock’, ‘cosine’, ‘euclidean’, ‘l1’, ‘l2’, ‘manhattan’
 data_DBscan = DBSCAN(epsilon, min_samples, metric)
 data_DBscan.fit_predict(data)
