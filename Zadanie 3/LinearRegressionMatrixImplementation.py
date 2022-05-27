@@ -93,8 +93,7 @@ def inv_Gauss(m):
         tab += [Gauss(m, x[i])]
     return tab
 # %% Multiple regression
-def MultipleRegression(DataFrame, cols: list, target: int):
-    Z = list(DataFrame.iloc[:,target]) 
+def MultipleRegression(DataFrame, cols: list, target: list):
     
     matrix = []
     matrix.append([1]*len(DataFrame))
@@ -104,7 +103,7 @@ def MultipleRegression(DataFrame, cols: list, target: int):
         
     XTX = AB(matrix,T(matrix)) # Nie ma sensu transponować podwójnie, dlatego jest taki zapis
     
-    return XTX, AB(AB(inv_Gauss(XTX),matrix),T([Z]))
+    return XTX, AB(AB(inv_Gauss(XTX),matrix),T([target]))
 
 def SSE(eps: list):
     sse = 0

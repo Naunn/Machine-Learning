@@ -6,7 +6,9 @@ Created on Mon May 16 23:53:48 2022
 """
 # %% Packages
 import pandas as pd
-# %% Import data
+from sklearn.preprocessing import MinMaxScaler
+
+# %% Data
 def list_conv(x: list):
     for _ in range(len(x)):
         x[_] = float(x[_])
@@ -40,5 +42,16 @@ data = {'Var_av': Var_av,
       'Var6': Var6,
       'Target': Target}
 
+
 df = pd.DataFrame(data)
-print(df.head())
+# %% Normalized data
+min_max_scaler = MinMaxScaler()
+min_max_data = df[['Var_LT','Var_mass','Target']]
+min_max_scalled_data = pd.DataFrame(min_max_scaler.fit_transform(min_max_data),
+                                    columns=min_max_data.columns)
+normalized_data = df.copy()
+normalized_data[['Var_LT',
+             'Var_mass',
+             'Target']] = min_max_scalled_data[['Var_LT',
+                                                'Var_mass',
+                                                'Target']]

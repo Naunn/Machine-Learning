@@ -16,7 +16,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.io as pio #Niezbędne do wywoływania interaktywnych rysunków
 #pio.renderers.default = 'svg' #Wykresy w Spyder (statyczne)
-pio.renderers.default = 'browser' #Wyrkesy w przeglądarce (interaktywne)
+pio.renderers.default = 'browser' #Wykresy w przeglądarce (interaktywne)
 
 # models
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
@@ -25,6 +25,7 @@ from statsmodels.sandbox.regression.predstd import wls_prediction_std
 from scipy.stats import boxcox
 from keras.layers import Dense, Activation
 from keras.models import Sequential
+from sklearn.model_selection import train_test_split
 # %% Exploration
 # =============================================================================
 # 1. Understand the problem. We'll look at each variable and do a philosophical 
@@ -118,7 +119,30 @@ df.Var_av.describe()
 
 # %% Visualization
 fig = px.line(df, x=[_ for _ in range(1,len(df)+1)], y = list(df.columns))
-fig.show()
+# fig.show()
+# %% Data split
+# In this case, We will split data rather then use cross-validation.
+
+# Set aside 20% of train and test data for evaluation.
+X_train, X_test, y_train, y_test = train_test_split(df.iloc[:,:-1],
+                                                    df.Target,
+                                                    test_size=0.2,
+                                                    shuffle = True,
+                                                    random_state = 8)
+
+# Use the same function above for the validation set.
+X_train, X_val, y_train, y_val = train_test_split(X_train,
+                                                  y_train,
+                                                  test_size=0.25,
+                                                  shuffle = True,
+                                                  random_state= 8)
+
+print("X_train shape: {}".format(X_train.shape))
+print("X_val shape: {}".format(X_val.shape))
+print("X_test shape: {}".format(X_test.shape))
+print("y_train shape: {}".format(y_train.shape))
+print("y val shape: {}".format(y_test.shape))
+print("y_test shape: {}".format(y_test.shape))
 # %% scaling
 
 # (W przypadku roznych skal)
@@ -150,6 +174,8 @@ normalized_data[['Var_LT',
 #               x=[_ for _ in range(1,len(df)+1)],
 #               y = list(scaled_data.columns))
 # fig.show()
+# %% Correlation Matrix
+corr_matrix = normalized_data.corr()
 # %% varaible check with lm
 # Standarized
 data = scaled_data.copy()
@@ -265,36 +291,36 @@ fig = px.line(df_Box_Cox_norm,
 # In our case we have: Nh = 399/(alpha*(399+1)) => 399/(4*(32+1)) ~ 2
 
 # Initialising the ANN
-model = Sequential()
+# model = Sequential()
 
-# Adding the input layer and the first hidden layer
-model.add(Dense(32, activation = 'relu', input_dim = 9))
+# # Adding the input layer and the first hidden layer
+# model.add(Dense(32, activation = 'relu', input_dim = 9))
 
-# Adding the second hidden layer
-model.add(Dense(units = 32, activation = 'relu'))
+# # Adding the second hidden layer
+# model.add(Dense(units = 32, activation = 'relu'))
 
-# Adding the third hidden layer
-model.add(Dense(units = 32, activation = 'relu'))
+# # Adding the third hidden layer
+# model.add(Dense(units = 32, activation = 'relu'))
 
-# Adding the output layer
-model.add(Dense(units = 1))
+# # Adding the output layer
+# model.add(Dense(units = 1))
 
-model.compile(optimizer = 'adam',loss = 'mean_squared_error', metrics=['mse', 'mae', 'mape'])
+# model.compile(optimizer = 'adam',loss = 'mean_squared_error', metrics=['mse', 'mae', 'mape'])
 
-X = np.array(normalized_data.iloc[:,:-1])
-Y = np.array(normalized_data.iloc[:,-1])
+# X = np.array(normalized_data.iloc[:,:-1])
+# Y = np.array(normalized_data.iloc[:,-1])
 
-fitted_model = model.fit(X, Y, epochs=100, batch_size=10, verbose=2)
-fitted_model.history
+# fitted_model = model.fit(X, Y, epochs=100, batch_size=10, verbose=2)
+# fitted_model.history
 
-y_pred = model.predict(X) # "sztuczna" predykcja
+# y_pred = model.predict(X) # "sztuczna" predykcja
 
-from LinearRegressionMatrixImplementation import T
+# from LinearRegressionMatrixImplementation import T
 
-tst = pd.DataFrame({'Target':normalized_data.Target,
-                    'pred':T(y_pred)[0]})
+# tst = pd.DataFrame({'Target':normalized_data.Target,
+#                     'pred':T(y_pred)[0]})
 
-fig = px.line(tst,
-              x=[_ for _ in range(1,len(y_pred)+1)],
-              y = tst.columns)
-fig.show()
+# fig = px.line(tst,
+#               x=[_ for _ in range(1,len(y_pred)+1)],
+#               y = tst.columns)
+# # fig.show()
