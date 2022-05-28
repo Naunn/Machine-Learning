@@ -7,6 +7,9 @@ Created on Tue May 17 14:06:25 2022
 # %% import
 # data
 from data import df
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from scipy.stats import boxcox
+from sklearn.model_selection import train_test_split
 
 # general
 import numpy as np
@@ -19,13 +22,10 @@ import plotly.io as pio #Niezbędne do wywoływania interaktywnych rysunków
 pio.renderers.default = 'browser' #Wykresy w przeglądarce (interaktywne)
 
 # models
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from statsmodels.api import OLS
 from statsmodels.sandbox.regression.predstd import wls_prediction_std
-from scipy.stats import boxcox
 from keras.layers import Dense, Activation
 from keras.models import Sequential
-from sklearn.model_selection import train_test_split
 # %% Exploration
 # =============================================================================
 # 1. Understand the problem. We'll look at each variable and do a philosophical 
@@ -37,7 +37,7 @@ from sklearn.model_selection import train_test_split
 # 2. Univariable study. We'll just focus on the dependent variable ('Target') 
 # and try to know a little bit more about it.
 # =============================================================================
-# # Jest to zapewne jakas miara odleglosci pokonanej przez obiekt, czy pchnieciu.
+# Jest to zapewne jakas miara odleglosci pokonanej przez obiekt, czy pchnieciu.
 # =============================================================================
 
 # 3. Multivariate study. We'll try to understand how the dependent variable 
@@ -65,6 +65,8 @@ from sklearn.model_selection import train_test_split
 
 # Based on Hair et al. (2013), chapter 'Examining your data'.
 # =============================================================================
+
+desc = df.describe()
 
 df.Target.describe()
 # count    399.000000
@@ -119,7 +121,8 @@ df.Var_av.describe()
 
 # %% Visualization
 fig = px.line(df, x=[_ for _ in range(1,len(df)+1)], y = list(df.columns))
-# fig.show()
+fig.show()
+corr_matrix = df.corr() # Correlation Matrix
 # %% Data split
 # In this case, We will split data rather then use cross-validation.
 
@@ -170,12 +173,12 @@ normalized_data[['Var_LT',
                                                 'Var_mass',
                                                 'Target']]
 
+desc = normalized_data.describe()
+                                                
 # fig = px.line(scaled_data,
 #               x=[_ for _ in range(1,len(df)+1)],
 #               y = list(scaled_data.columns))
 # fig.show()
-# %% Correlation Matrix
-corr_matrix = normalized_data.corr()
 # %% varaible check with lm
 # Standarized
 data = scaled_data.copy()

@@ -7,7 +7,6 @@ Created on Mon May 16 23:53:48 2022
 # %% Packages
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-
 # %% Data
 def list_conv(x: list):
     for _ in range(len(x)):

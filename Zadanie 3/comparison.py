@@ -31,7 +31,6 @@ from statsmodels.api import OLS
 from statsmodels.sandbox.regression.predstd import wls_prediction_std
 from keras.layers import Dense, Activation
 from keras.models import Sequential
-
 # %% Preparing splitted Data
 data = normalized_data.copy()
 X_train, X_test, y_train, y_test = train_test_split(data.iloc[:,:-1],
@@ -40,7 +39,7 @@ X_train, X_test, y_train, y_test = train_test_split(data.iloc[:,:-1],
                                                     shuffle = True,
                                                     random_state = 8)
 
-# %% Linear multiple regression
+# %% Linear multiple regression (OLS by hand)
 cols = [0,1,2,3,4,5,6,7,8]
 XTX, coeff = MultipleRegression(X_train, cols, np.array(y_train))
 print("coeff:",coeff)
@@ -195,7 +194,7 @@ model.compile(optimizer = 'adam',loss = 'mean_squared_error', metrics=['mse', 'm
 # Verbose is visual setting.
 # With batch_size: 25, 50, there is a problem with missing best fitting.
 # We go with batch_size = 10 and many (min. 1000) epochs.
-history = model.fit(X_train, y_train, epochs=100, batch_size=10, verbose=2)
+history = model.fit(X_train, y_train, epochs=100, batch_size=5, verbose=2)
 
 pred = model.predict(X_test.iloc[:,:9])
 

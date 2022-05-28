@@ -25,6 +25,7 @@ from LinearRegressionMatrixImplementation import SSE,SSR,SST,R_Squared,R_Squared
 from sklearn.metrics import mean_squared_error, mean_absolute_error, mean_absolute_percentage_error
 from keras.layers import Dense, Activation
 from keras.models import Sequential
+from keras.callbacks import EarlyStopping
 
 # %% Preparing splitted Data
 data = normalized_data.copy()
@@ -138,6 +139,7 @@ for opt in optimators:
                               ignore_index=True)
 
 # %% best model
+# https://machinelearningmastery.com/how-to-stop-training-deep-neural-networks-at-the-right-time-using-early-stopping/
 model = Sequential()
 
 model.add(Dense(32, activation = "relu", input_dim = 9))
@@ -152,7 +154,18 @@ model.compile(optimizer = 'Adam',
               loss = 'mean_squared_error',
               metrics=['mse', 'mae', 'mape'])
 
-history = model.fit(X_train, y_train, epochs=5000, batch_size=5, verbose=2)
+es = EarlyStopping(monitor='val_loss', mode='min', verbose=1)
+# Training will stop when the chosen performance measure stops improving.
+# To discover the training epoch on which training was stopped, the “verbose”
+# argument can be set to 1. Once stopped, the callback will print the epoch number.
+
+history = model.fit(X_train,
+                    y_train,
+                    validation_data=(X_val, y_val),
+                    epochs=250,
+                    batch_size=5,
+                    verbose=2)
+                    # callbacks = [es])
 
 pred = model.predict(X_test.iloc[:,:9])
 
