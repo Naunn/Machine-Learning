@@ -239,7 +239,7 @@ print(classification_report(y_val, clf.predict(X_val)))
 # 
 # =============================================================================
 
-# Jak dla mnie, jądro wileomianowe jest zwyciezcą (ponizej sciagawka jak czytac macierz)
+# Jak dla mnie, jądro wielomianowe jest zwyciezcą (ponizej sciagawka jak czytac macierz)
 # https://towardsdatascience.com/confusion-matrix-for-your-multi-class-machine-learning-model-ff9aa3bf7826
 # [[ 86   2   0   0]  <- to wszystko zaklasyfikowano jako 1
 #  [  4  89   2   0]  <- to wszystko zaklasyfikowano jako 2
@@ -247,12 +247,14 @@ print(classification_report(y_val, clf.predict(X_val)))
 #  [  0   0   9  99]] <- to wszystko zaklasyfikowano jako 4
 #     1   2   3   4   <- kolejno to sa odpowiednie (prawdziwe) kategorie
 
-print(confusion_matrix(y_test, clf.predict(X_test)))
+print("Confusion matrix\n",confusion_matrix(y_test, clf.predict(X_test)),"\n")
 print(classification_report(y_test, clf.predict(X_test)))
-# [[99  1  0  0]
+# Confusion matrix
+#  [[99  1  0  0]
 #  [ 5 93  3  0]
 #  [ 0  5 90  1]
-#  [ 0  0  5 98]]
+#  [ 0  0  5 98]] 
+
 #               precision    recall  f1-score   support
 
 #            1       0.95      0.99      0.97       100
