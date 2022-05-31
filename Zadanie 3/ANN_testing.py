@@ -161,7 +161,7 @@ es = EarlyStopping(monitor='val_loss', mode='min', verbose=1)
 
 history = model.fit(X_train,
                     y_train,
-                    validation_data=(X_val, y_val),
+                    validation_data=(X_val.iloc[:,:9], y_val),
                     epochs=250,
                     batch_size=5,
                     verbose=2)
