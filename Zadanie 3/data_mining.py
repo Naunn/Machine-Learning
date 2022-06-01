@@ -91,7 +91,7 @@ print("Kurtosis: %f" % cel.kurt())
 
 # Poszukiwanie pewnych grup w zmiennych manipulowanych przez firme.
 fig = px.scatter(df, x = 'Var_LT', y = 'Var_mass')
-# fig.show()
+fig.show()
 
 # Wszelkie dane (poza Var_mass i Var_LT) sa z przedzialu (0,1)
 df.Var_av.describe()
@@ -115,9 +115,9 @@ df.Var_av.describe()
 # "Lower BIC via higher log likelihood or less parameters or less samples used in fitting".
 # =============================================================================
 
-# Note. In our case, BIC is not essential. Also, it is important
-# to compare models with variables on the same scales. For example, the
-# AIC score will be different for original data and normalized data.
+# Note. In our case, BIC is not essential. Also, it is important,
+# to compare models with variables on the same scales (model vs model).
+# For example, the AIC score will be different for original data and normalized data.
 
 # %% Visualization
 fig = px.line(df, x=[_ for _ in range(1,len(df)+1)], y = list(df.columns))
